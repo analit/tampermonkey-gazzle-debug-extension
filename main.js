@@ -8,18 +8,16 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     const compose = (...functions) => args => functions.reduceRight((arg, fn) => fn(arg), args)
 
     const getDocumentElements = (document) => document.querySelectorAll("#collector-content li")
 
-    const getQueryString = (href) => decodeURIComponent(href).split("\n")[0].replace(/^.+\/\?/, "").trim().replace(/ HTTP\/1.1$/, "")
+    const getQueryString = (href) => decodeURIComponent(href).split("\n")[0].replace(/^.+\?/, "").trim().replace(/ HTTP\/1.1$/, "")
 
-    const getHost = (href) => decodeURIComponent(href).split("\n")[1].replace(/^Host:\s/, "").trim()
-
-    const getSheme = (innerText) => innerText.match(/https?/)[0]
+    const getUrl = (innerText) => innerText.match(/https?.+\?/)[0]
 
     const createNewElement = (container) => {
         const requestHref = container.getElementsByTagName("a")[0].href
@@ -43,7 +41,7 @@
         const a = document.createElement("a")
         a.setAttribute("target", "__blank")
         a.setAttribute("style", "color:blue")
-        a.href = getSheme(container.innerText) + "://" + getHost(requestHref) + "?" + getQueryString(requestHref)
+        a.href = getUrl(container.innerText) + getQueryString(requestHref)
         a.innerText = list[0].innerText;
 
         list.shift();
