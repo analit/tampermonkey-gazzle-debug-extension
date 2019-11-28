@@ -25,11 +25,11 @@
         newContainer.setAttribute("style", "margin:10px 0;font-family:monospace")
         const ul = document.createElement("ul")
 
-        const list = compose(
+        const listQueryParams = compose(
             (queryParamsArray) => queryParamsArray.map(queryParam => {
                 const li = document.createElement('li')
                 li.setAttribute("style", "padding:0")
-                li.innerText = queryParam
+                li.innerText = decodeURIComponent(queryParam)
                 return li
             }),
             (queryParamsArray) => queryParamsArray.sort((paramA, paramB) => /cm=/.test(paramB) ? 1 : -1),
@@ -42,10 +42,10 @@
         a.setAttribute("target", "__blank")
         a.setAttribute("style", "color:blue")
         a.href = getUrl(container.innerText) + getQueryString(requestHref)
-        a.innerText = list[0].innerText;
+        a.innerText = listQueryParams[0].innerText;
 
-        list.shift();
-        ul.append(...list);
+        listQueryParams.shift();
+        ul.append(...listQueryParams);
         newContainer.append(a, ul);
 
         return newContainer;
